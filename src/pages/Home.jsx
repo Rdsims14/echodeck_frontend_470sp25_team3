@@ -1,23 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom'; // Ensure this import is present
+import { Link } from 'react-router-dom';
+import axios from 'axios'; // Ensure axios is imported
 
 export default function Home() {
-    const [sounds, setSounds] = useState([
-        { id: 1, name: "Fart" },
-        { id: 2, name: "Snake Alert Sound" },
-        { id: 3, name: "DAMN!!" },
-        { id: 4, name: "Booty Strap" }
-    ]);
-    
+    const [sounds, setSounds] = useState([]);
+
     useEffect(() => {
         fetchSounds();
-    });
+    }, []); // Add dependency array to avoid infinite calls
 
     const fetchSounds = async () => {
-        const result = await axios.get('http://localhost:8080/api/sounds');
-        console.log(result.data);
-    }
+        try {
+            const result = await axios.get('http://localhost:8080/api/sounds');
+            const formattedSounds = result.data.map((sound) => ({
+                id: sound.id,
+                name: sound.name,
+                file_url: sound.file_url,
+            }));
+            setSounds(formattedSounds);
+        } catch (error) {
+            console.error("Error fetching sounds:", error);
+        }
+    };
+
     return (
         <div className='container-fluid'>
             <div className='py-4'>
@@ -27,12 +33,14 @@ export default function Home() {
                             <div className='fs-1 mb-3'>&#128266;</div>
                             <div className='fw-bold'>{sound.name}</div>
                             <div className='mt-3'>
-                                <Button variant='primary' className='mx-1'>&#9654;</Button>
+                                <audio controls>
+                                    <source src={sound.file_url} type="audio/mpeg" />
+                                    Your browser does not support the audio element.
+                                </audio>
                                 <Link className="btn btn-secondary mx-1" to={`/viewsound/${sound.id}`}>
                                     &#128193;
                                 </Link>
                                 <Button variant='danger' className='mx-1'>&#128465;</Button>
-                                
                             </div>
                         </div>
                     ))}

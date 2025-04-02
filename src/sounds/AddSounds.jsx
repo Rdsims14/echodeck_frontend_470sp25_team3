@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function AddSounds() {
     let navigate = useNavigate();
 
     const [sound, setSound] = useState({
         name: "",
-        description: "",
         file: null,
     });
 
-    const { name, description, file } = sound;
+    const { name, file } = sound;
 
     const onInputChange = (e) => {
         setSound({ ...sound, [e.target.name]: e.target.value });
@@ -25,7 +24,6 @@ export default function AddSounds() {
         e.preventDefault();
         const formData = new FormData();
         formData.append("name", name);
-        formData.append("description", description);
         formData.append("file", file);
 
         try {
@@ -34,7 +32,7 @@ export default function AddSounds() {
                     "Content-Type": "multipart/form-data",
                 },
             });
-            navigate("/sounds");
+            navigate("/");
         } catch (error) {
             console.error("Error uploading sound:", error);
         }
@@ -55,17 +53,6 @@ export default function AddSounds() {
                         onChange={onInputChange}
                         required
                     />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="description">Description</label>
-                    <textarea
-                        className="form-control"
-                        id="description"
-                        name="description"
-                        value={description}
-                        onChange={onInputChange}
-                        required
-                    ></textarea>
                 </div>
                 <div className="form-group">
                     <label htmlFor="file">File</label>

@@ -25,7 +25,7 @@ export default function ViewSounds() {
         <div className="container">
             <h2>{sound.name}</h2>
             <audio controls>
-                <source src={sound.file} type="audio/mpeg" />
+                <source src={sound.file_url} type="audio/mpeg" />
                 Your browser does not support the audio element.
             </audio>
             <p>{sound.description}</p>
