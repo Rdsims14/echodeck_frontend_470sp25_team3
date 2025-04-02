@@ -11,10 +11,16 @@ function App() {
 
   return (
     <div className="App">
+      <Rounter>
       <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/addSounds" element={<AddSounds />} />
+        <Route path="/viewSounds/:id" element={<ViewSounds />} />
+        {/* Add other routes as needed */}
+      </Routes>
       <Home />
-
-
+      </Rounter>
     </div>
   );
 }

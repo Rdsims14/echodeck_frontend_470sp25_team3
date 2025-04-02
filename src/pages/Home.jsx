@@ -8,7 +8,29 @@ export default function Home() {
         { id: 3, name: "SoundName" },
         { id: 4, name: "SoundName" }
     ]);
+    useEffect(() => {
+        loadSounds();
+    })
 
+    const loadSounds = async () => {
+        setUsers((await axios.get(`${API_BASE_URL}/sounds`)).data);
+    };
+    
+    const addSound = () => {
+        // This function will add a new sound to the list
+        const newSound = {
+            id: sounds.length + 1, // Simple ID increment, in real app use UUID or backend generated ID
+            name: `SoundName ${sounds.length + 1}`
+        };
+        setSounds([...sounds, newSound]);
+    }
+
+    const deleteSounds = async (id) => {
+        await axios.delete(`${API_BASE_URL}/sounds/${id}`, {
+          headers: AuthService.getAuthHeader(),
+        });
+        loadSounds();
+      };
     return (
         <div className='container-fluid'>
             <div className='py-4'>
