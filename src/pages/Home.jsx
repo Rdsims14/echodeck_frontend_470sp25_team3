@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom'; // Ensure this import is present
 
 export default function Home() {
     const [sounds, setSounds] = useState([
-        { id: 1, name: "SoundName" },
-        { id: 2, name: "SoundName" },
-        { id: 3, name: "SoundName" },
-        { id: 4, name: "SoundName" }
+        { id: 1, name: "Fart" },
+        { id: 2, name: "Snake Alert Sound" },
+        { id: 3, name: "DAMN!!" },
+        { id: 4, name: "Booty Strap" }
     ]);
+    
+    useEffect(() => {
+        fetchSounds();
+    });
+
+    const fetchSounds = async () => {
+        const result = await axios.get('http://localhost:8080/api/sounds');
+        console.log(result.data);
+    }
     return (
         <div className='container-fluid'>
             <div className='py-4'>
@@ -18,8 +28,11 @@ export default function Home() {
                             <div className='fw-bold'>{sound.name}</div>
                             <div className='mt-3'>
                                 <Button variant='primary' className='mx-1'>&#9654;</Button>
-                                <Button variant='secondary' className='mx-1'>&#128193;</Button>
+                                <Link className="btn btn-secondary mx-1" to={`/viewsound/${sound.id}`}>
+                                    &#128193;
+                                </Link>
                                 <Button variant='danger' className='mx-1'>&#128465;</Button>
+                                
                             </div>
                         </div>
                     ))}
