@@ -8,7 +8,6 @@ export default function Home() {
         { id: 3, name: "SoundName" },
         { id: 4, name: "SoundName" }
     ]);
-
     return (
         <div className='container-fluid'>
             <div className='py-4'>
