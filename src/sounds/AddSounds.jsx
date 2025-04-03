@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
 export default function AddSounds() {
     let navigate = useNavigate();
 
@@ -27,7 +26,7 @@ export default function AddSounds() {
         formData.append("file", file);
 
         try {
-            await axios.post("/api/sounds", formData, {
+            await axios.post(`${API_BASE_URL}/sounds`, formData, { // Updated API endpoint
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
