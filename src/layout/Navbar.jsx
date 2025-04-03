@@ -1,26 +1,33 @@
-import React from 'react';
+import React from "react";
+import { Link } from "react-router-dom";  // Make sure to import Link for navigation
 
 export default function Navbar() {
     return (
         <div>
             <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
                 <div className="container-fluid">
-                    <a className="navbar-brand" href="#">
+                    <Link className="navbar-brand" to="/">
                         Echodeck
-                    </a>
-                    <button className="navbar-toggler"
+                    </Link>
+                    <button
+                        className="navbar-toggler"
                         type="button"
                         data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent"
                         aria-controls="navbarSupportedContent"
                         aria-expanded="false"
-                        aria-label="Toggle navigation">
+                        aria-label="Toggle navigation"
+                    >
                         <span className="navbar-toggler-icon"></span>
                     </button>
 
                     <div className="ms-auto">
-                        <button className="btn btn-outline-light me-2" type="button">Sign Up</button>
-                        <button className="btn btn-outline-light me-2" type="button">Login</button>
+                        <Link to="/signup" className="btn btn-outline-light me-2">
+                            Sign Up
+                        </Link>
+                        <Link to="/login" className="btn btn-outline-light me-2">
+                            Login
+                        </Link>
                     </div>
                 </div>
             </nav>
