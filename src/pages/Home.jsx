@@ -45,9 +45,11 @@ export default function Home() {
                         </div>
                     ))}
                     <div className='col text-center d-flex flex-column align-items-center justify-content-center ms-4'>
-                        <Button variant='light' className='rounded-circle d-flex align-items-center justify-content-center' style={{ width: '50px', height: '50px', fontSize: '24px', cursor: 'default' }}>
+                        <Link to="/add-sound"
+                        variant='light' 
+                        className='rounded-circle d-flex align-items-center justify-content-center' style={{ width: '50px', height: '50px', fontSize: '24px', cursor: 'default' }}>
                             &#10133;
-                        </Button>
+                        </Link>
                         <div className='mt-2'>Add Sound</div>
                     </div>
                 </div>

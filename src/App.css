@@ -84,3 +84,16 @@ See docs here: https://getbootstrap.com/docs/5.0/layout/containers/
 .read-the-docs {
   color: #888;
 }
+
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    background-color: #f8f9fa; /* Optional: Light background color */
+}
+
+.custom-container {
+    width: 100%;
+    max-width: 500px; /* Limit the width of the form */
+}

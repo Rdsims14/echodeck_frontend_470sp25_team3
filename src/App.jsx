@@ -1,22 +1,23 @@
-import { useState } from 'react'
-import './App.css'
-import "../node_modules/bootstrap/dist/css/bootstrap.min.css"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import './App.css';
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import Navbar from './layout/Navbar';
 import Home from './pages/Home';
-// import ViewSounds from './sounds/ViewSounds'; // Uncomment this line if you want to use the ViewSounds component
-
+import AddSounds from './sounds/AddSounds'; // Import the AddSounds component
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <div className="App">
-      <Navbar />
-      <Home />
-
-
-    </div>
+    <div className="App"> {/* Properly opened <div> */}
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/add-sound" element={<AddSounds />} /> {/* Add this route */}
+        </Routes>
+        
+      </Router>
+    </div> 
   );
 }
 
-export default App
+export default App;
