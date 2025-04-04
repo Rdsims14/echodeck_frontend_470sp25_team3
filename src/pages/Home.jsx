@@ -4,8 +4,14 @@ import { Link } from 'react-router-dom';
 import axios from 'axios'; // Ensure axios is imported
 
 export default function Home() {
-    const [sounds, setSounds] = useState([]);
+    const [sounds, setSounds] = useState([
+         { id: 1, name: "SoundName" ,file_url: "http://localhost:8080/api/sounds/1" },
+         { id: 2, name: "SoundName" ,file_url: "http://localhost:8080/api/sounds/2" },
+         { id: 3, name: "SoundName" ,file_url: "http://localhost:8080/api/sounds/3" },
+         { id: 4, name: "SoundName" ,file_url: "http://localhost:8080/api/sounds/4" },
+         
 
+        ]);
     useEffect(() => {
         fetchSounds();
     }, []); // Add dependency array to avoid infinite calls
