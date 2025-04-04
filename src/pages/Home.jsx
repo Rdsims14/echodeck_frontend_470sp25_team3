@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import axios from 'axios'; // Ensure axios is imported
+import axios from 'axios';
 
 export default function Home() {
     const [sounds, setSounds] = useState([
-         { id: 1, name: "SoundName" ,file_url: "http://localhost:8080/api/sounds/1" },
-         { id: 2, name: "SoundName" ,file_url: "http://localhost:8080/api/sounds/2" },
-         { id: 3, name: "SoundName" ,file_url: "http://localhost:8080/api/sounds/3" },
-         { id: 4, name: "SoundName" ,file_url: "http://localhost:8080/api/sounds/4" },
-         
-
-        ]);
+        { id: 1, name: "SoundName", file_url: "http://localhost:8080/api/sounds/1" },
+        { id: 2, name: "SoundName", file_url: "http://localhost:8080/api/sounds/2" },
+        { id: 3, name: "SoundName", file_url: "http://localhost:8080/api/sounds/3" },
+        { id: 4, name: "SoundName", file_url: "http://localhost:8080/api/sounds/4" },
+    ]);
+    const [hoverData, setHoverData] = useState([]);
     useEffect(() => {
         fetchSounds();
-    }, []); // Add dependency array to avoid infinite calls
+        // TODO: Fetch hover (pop-up tab) data from the backend when implemented
+    }, []);
 
     const fetchSounds = async () => {
         try {
@@ -29,6 +29,37 @@ export default function Home() {
             console.error("Error fetching sounds:", error);
         }
     };
+
+    // Popover content for the "Add Sound" button
+    const popover = (
+        <Popover id="popover-basic">
+            <Popover.Body>
+                <table className="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Artist</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {/* TODO: Replace this static data with data from the backend */}
+                        {hoverData.length > 0 ? (
+                            hoverData.map((data, index) => (
+                                <tr key={index}>
+                                    <td>{data.name}</td>
+                                    <td>{data.artist}</td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="2">No data available</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </Popover.Body>
+        </Popover>
+    );
 
     return (
         <div className='container-fluid'>
@@ -51,11 +82,24 @@ export default function Home() {
                         </div>
                     ))}
                     <div className='col text-center d-flex flex-column align-items-center justify-content-center ms-4'>
-                        <Link to="/add-sound"
-                        variant='light' 
-                        className='rounded-circle d-flex align-items-center justify-content-center' style={{ width: '50px', height: '50px', fontSize: '24px', cursor: 'default' }}>
-                            &#10133;
-                        </Link>
+                        <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
+                            <Link
+                                to="/add-sound"
+                                className='d-flex align-items-center justify-content-center'
+                                style={{
+                                    width: '50px', height: '50px', fontSize: '24px', borderRadius: '50%',
+                                    border: '2px solid black', textDecoration: 'none', color: 'black',
+                                    backgroundColor: 'white', transition: 'background-color 0.3s, color 0.3s',
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.target.style.backgroundColor = 'lightgrey';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.target.style.backgroundColor = 'white';
+                                }}>
+                                &#10133;
+                            </Link>
+                        </OverlayTrigger>
                         <div className='mt-2'>Add Sound</div>
                     </div>
                 </div>
