@@ -4,9 +4,13 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Home() {
-    const [sounds, setSounds] = useState([]);
-    const [hoverData, setHoverData] = useState([]); // State for hover (pop-up tab) data
-
+    const [sounds, setSounds] = useState([
+        { id: 1, name: "SoundName", file_url: "http://localhost:8080/api/sounds/1" },
+        { id: 2, name: "SoundName", file_url: "http://localhost:8080/api/sounds/2" },
+        { id: 3, name: "SoundName", file_url: "http://localhost:8080/api/sounds/3" },
+        { id: 4, name: "SoundName", file_url: "http://localhost:8080/api/sounds/4" },
+    ]);
+    const [hoverData, setHoverData] = useState([]);
     useEffect(() => {
         fetchSounds();
         // TODO: Fetch hover (pop-up tab) data from the backend when implemented
