@@ -4,30 +4,26 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Home() {
-    const [sounds, setSounds] = useState([
-        { id: 1, name: "SoundName", file_url: "http://localhost:8080/api/sounds/1" },
-        { id: 2, name: "SoundName", file_url: "http://localhost:8080/api/sounds/2" },
-        { id: 3, name: "SoundName", file_url: "http://localhost:8080/api/sounds/3" },
-        { id: 4, name: "SoundName", file_url: "http://localhost:8080/api/sounds/4" },
-    ]);
+    const [sounds, setSounds] = useState([]);
     const [hoverData, setHoverData] = useState([]);
+    const [popoverVisible, setPopoverVisible] = useState(false); // State to control popover visibility
+
     useEffect(() => {
-        fetchSounds();
-        // TODO: Fetch hover (pop-up tab) data from the backend when implemented
+        fetchHoverData();
     }, []);
 
-    const fetchSounds = async () => {
+    const fetchHoverData = async () => {
         try {
             const result = await axios.get('http://localhost:8080/api/sounds');
-            const formattedSounds = result.data.map((sound) => ({
-                id: sound.id,
-                name: sound.name,
-                file_url: sound.file_url,
-            }));
-            setSounds(formattedSounds);
+            setHoverData(result.data); // Assuming the API returns an array of sounds
         } catch (error) {
-            console.error("Error fetching sounds:", error);
+            console.error("Error fetching hover data:", error);
         }
+    };
+
+    const handleAddSound = (sound) => {
+        setSounds((prevSounds) => [...prevSounds, sound]); // Add the selected sound to the sounds state
+        setPopoverVisible(false); // Optionally close the popover after selection
     };
 
     // Popover content for the "Add Sound" button
@@ -38,21 +34,25 @@ export default function Home() {
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Artist</th>
+                            <th>File</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {/* TODO: Replace this static data with data from the backend */}
                         {hoverData.length > 0 ? (
-                            hoverData.map((data, index) => (
-                                <tr key={index}>
-                                    <td>{data.name}</td>
-                                    <td>{data.artist}</td>
+                            hoverData.map((sound, index) => (
+                                <tr key={index} onClick={() => handleAddSound(sound)} style={{ cursor: 'pointer' }}>
+                                    <td>{sound.name}</td>
+                                    <td>
+                                        <audio controls>
+                                            <source src={sound.file_url} type="audio/mpeg" />
+                                            Your browser does not support the audio element.
+                                        </audio>
+                                    </td>
                                 </tr>
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="2">No data available</td>
+                                <td colSpan="2">No sounds available</td>
                             </tr>
                         )}
                     </tbody>
@@ -82,14 +82,24 @@ export default function Home() {
                         </div>
                     ))}
                     <div className='col text-center d-flex flex-column align-items-center justify-content-center ms-4'>
-                        <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
+                        <OverlayTrigger
+                            trigger="click"
+                            placement="bottom"
+                            overlay={popover}
+                            show={popoverVisible}
+                            onToggle={() => setPopoverVisible(!popoverVisible)}
+                        >
                             <Link
-                                to="/add-sound"
+                                to="#"
                                 className='d-flex align-items-center justify-content-center'
                                 style={{
                                     width: '50px', height: '50px', fontSize: '24px', borderRadius: '50%',
                                     border: '2px solid black', textDecoration: 'none', color: 'black',
                                     backgroundColor: 'white', transition: 'background-color 0.3s, color 0.3s',
+                                }}
+                                onClick={(e) => {
+                                    e.preventDefault(); // Prevent navigation
+                                    setPopoverVisible(!popoverVisible); // Toggle popover visibility
                                 }}
                                 onMouseEnter={(e) => {
                                     e.target.style.backgroundColor = 'lightgrey';
