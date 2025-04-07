@@ -12,7 +12,7 @@ export default function ViewSounds() {
 
     const fetchSound = async () => {
         try {
-            const result = await axios.get(`http://localhost:8080/api/sounds/${id}`);
+            const result = await axios.get(`http://localhost:8080/api/sounds`);
             setSound(result.data);
         } catch (error) {
             console.error("Error fetching sound:", error);
