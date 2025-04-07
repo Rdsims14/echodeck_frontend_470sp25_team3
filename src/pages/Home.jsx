@@ -44,7 +44,7 @@ export default function Home() {
                                     <td>{sound.name}</td>
                                     <td>
                                         <audio controls>
-                                            <source src={sound.file_url} type="audio/mpeg" />
+                                            <source src={sound.fileUrl} type="audio/mpeg" />
                                             Your browser does not support the audio element.
                                         </audio>
                                     </td>
@@ -71,7 +71,7 @@ export default function Home() {
                             <div className='fw-bold'>{sound.name}</div>
                             <div className='mt-3'>
                                 <audio controls>
-                                    <source src={sound.file_url} type="audio/mpeg" />
+                                    <source src={sound.fileUrl} type="audio/mpeg" />
                                     Your browser does not support the audio element.
                                 </audio>
                                 <Link className="btn btn-secondary mx-1" to={`/viewsound/${sound.id}`}>
