@@ -1,16 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Home() {
-    const [sounds, setSounds] = useState([]);
     const [hoverData, setHoverData] = useState([]);
     const [popoverVisible, setPopoverVisible] = useState(false);
+    const [sounds, setSounds] = useState(() => {
+        // Load sounds from sessionStorage if available
+        const savedSounds = sessionStorage.getItem('sounds');
+        return savedSounds ? JSON.parse(savedSounds) : [];
+    });
 
     useEffect(() => {
         fetchHoverData();
     }, []);
+
+    useEffect(() => {
+        // Save sounds to sessionStorage whenever they change
+        sessionStorage.setItem('sounds', JSON.stringify(sounds));
+    }, [sounds]);
 
     const fetchHoverData = async () => {
         try {
@@ -22,8 +31,16 @@ export default function Home() {
     };
 
     const handleAddSound = (sound) => {
-        setSounds((prevSounds) => [...prevSounds, sound]);
-        setPopoverVisible(false);
+        // Check if the sound already exists in the sounds array
+        const soundExists = sounds.some((existingSound) => existingSound.id === sound.id);
+    
+        if (!soundExists) {
+            const updatedSounds = [...sounds, sound];
+            setSounds(updatedSounds); // Update the state
+            setPopoverVisible(false);
+        } else {
+            alert("This sound is already added!"); // Optional: Notify the user
+        }
     };
 
     const handlePlaySound = (soundId) => {
@@ -33,9 +50,9 @@ export default function Home() {
         }
     };
 
-    // Function to remove a sound from the user's page
     const handleRemoveSound = (soundId) => {
-        setSounds((prevSounds) => prevSounds.filter((sound) => sound.id !== soundId));
+        const updatedSounds = sounds.filter((sound) => sound.id !== soundId);
+        setSounds(updatedSounds); // Update the state
     };
 
     const popover = (
@@ -93,7 +110,7 @@ export default function Home() {
                                     <Button
                                         variant='danger'
                                         className='mx-1'
-                                        onClick={() => handleRemoveSound(sound.id)} // Attach the remove function
+                                        onClick={() => handleRemoveSound(sound.id)}
                                     >
                                         &#128465;
                                     </Button>
