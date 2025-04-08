@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import AddSounds from './sounds/AddSounds'; // Import the AddSounds component
 import SignUp from "./auth/SignUp";
 import Login from "./auth/Login";
+import ViewSounds from "./sounds/ViewSounds";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/add-sound" element={<AddSounds />} /> {/* Add this route */}
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/viewsound/:id" element={<ViewSounds />} />
           <Route path="/login" element={<Login />} />
         </Routes>
       </Router>
