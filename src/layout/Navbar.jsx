@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";  // Make sure to import Link for naviga
 export default function Navbar() {
     return (
         <div>
-            <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+            <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
                 <div className="container-fluid">
                     <Link className="navbar-brand" to="/">
                         Echodeck

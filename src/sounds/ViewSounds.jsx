@@ -27,7 +27,7 @@ export default function ViewSounds() {
     };
 
     return (
-        <div className="container mt-5">
+        <div className="custom container-fluid">
             <div className="row">
                 <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 shadow">
                     <h2 className="text-center m-4">Sound Details</h2>
