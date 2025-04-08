@@ -6,7 +6,7 @@ import axios from 'axios';
 export default function Home() {
     const [sounds, setSounds] = useState([]);
     const [hoverData, setHoverData] = useState([]);
-    const [popoverVisible, setPopoverVisible] = useState(false); // State to control popover visibility
+    const [popoverVisible, setPopoverVisible] = useState(false);
 
     useEffect(() => {
         fetchHoverData();
@@ -15,18 +15,17 @@ export default function Home() {
     const fetchHoverData = async () => {
         try {
             const result = await axios.get('http://localhost:8080/api/sounds');
-            setHoverData(result.data); // Assuming the API returns an array of sounds
+            setHoverData(result.data);
         } catch (error) {
             console.error("Error fetching hover data:", error);
         }
     };
 
     const handleAddSound = (sound) => {
-        setSounds((prevSounds) => [...prevSounds, sound]); // Add the selected sound to the sounds state
-        setPopoverVisible(false); // Optionally close the popover after selection
+        setSounds((prevSounds) => [...prevSounds, sound]);
+        setPopoverVisible(false);
     };
 
-    // Add this function to handle playing the sound
     const handlePlaySound = (soundId) => {
         const audioElement = document.getElementById(`audio-${soundId}`);
         if (audioElement) {
@@ -34,7 +33,11 @@ export default function Home() {
         }
     };
 
-    // Popover content for the "Add Sound" button
+    // Function to remove a sound from the user's page
+    const handleRemoveSound = (soundId) => {
+        setSounds((prevSounds) => prevSounds.filter((sound) => sound.id !== soundId));
+    };
+
     const popover = (
         <Popover id="popover-basic">
             <Popover.Body>
@@ -87,7 +90,13 @@ export default function Home() {
                                     <Link className="btn btn-secondary mx-1" to={`/viewsound/${sound.id}`}>
                                         &#128193;
                                     </Link>
-                                    <Button variant='danger' className='mx-1'>&#128465;</Button>
+                                    <Button
+                                        variant='danger'
+                                        className='mx-1'
+                                        onClick={() => handleRemoveSound(sound.id)} // Attach the remove function
+                                    >
+                                        &#128465;
+                                    </Button>
                                 </div>
                             </div>
                         </div>
@@ -109,8 +118,8 @@ export default function Home() {
                                     backgroundColor: 'white', transition: 'background-color 0.3s, color 0.3s',
                                 }}
                                 onClick={(e) => {
-                                    e.preventDefault(); // Prevent navigation
-                                    setPopoverVisible(!popoverVisible); // Toggle popover visibility
+                                    e.preventDefault();
+                                    setPopoverVisible(!popoverVisible);
                                 }}
                                 onMouseEnter={(e) => {
                                     e.target.style.backgroundColor = 'lightgrey';

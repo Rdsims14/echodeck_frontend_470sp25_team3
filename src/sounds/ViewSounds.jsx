@@ -3,38 +3,58 @@ import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 
 export default function ViewSounds() {
+    const [sounds, setSounds] = useState({
+        file_url: "",
+        name: "",
+        artist: "",
+        credit: "",
+    });
+
     const { id } = useParams();
-    const [sound, setSound] = useState(null);
 
     useEffect(() => {
-        fetchSound();
-    }, [id]);
+        loadSound();
+    }, []);
 
-    const fetchSound = async () => {
+    const loadSound = async () => {
         try {
-            const result = await axios.get(`http://localhost:8080/api/sounds`);
-            setSound(result.data);
+            const result = await axios.get(`http://localhost:8080/api/sounds/${id}`);
+            console.log("API Response:", result.data); // Debugging log
+            setSounds(result.data);
         } catch (error) {
-            console.error("Error fetching sound:", error);
-            setSound({ error: true });
+            console.error("Error fetching sound details:", error);
         }
     };
 
-    if (!sound) return <div className="text-center mt-5">Loading...</div>;
-    if (sound.error) return <div className="text-center mt-5 text-danger">Failed to load sound. Please try again later.</div>;
-
     return (
         <div className="container mt-5">
-            <h2 className="text-center">{sound.name}</h2>
-            <div className="text-center my-4">
-                <audio controls>
-                    <source src={sound.file_url} type="audio/mpeg" />
-                    Your browser does not support the audio element.
-                </audio>
-            </div>
-            <p className="text-center">{sound.description || "No description available."}</p>
-            <div className="text-center">
-                <Link to="/" className="btn btn-primary">Back to Sounds</Link>
+            <div className="row">
+                <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 shadow">
+                    <h2 className="text-center m-4">Sound Details</h2>
+
+                    <div className="card">
+                        <div className="card-header">
+                            Details of sound id: {id}
+                            <ul className="list-group list-group-flush">
+                                <li className="list-group-item">
+                                    <b>file_url:</b> {sounds.file_url || "Not Available"}
+                                </li>
+                                <li className="list-group-item">
+                                    <b>sound name:</b> {sounds.name || "Not Available"}
+                                </li>
+                                <li className="list-group-item">
+                                    <b>Artist:</b> {sounds.artist || "Not Available"}
+                                </li>
+                                <li className="list-group-item">
+                                    <b>Credit:</b> {sounds.credit || "Not Available"}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <Link to="/" className="btn btn-primary mt-4">
+                        Back to Home
+                    </Link>
+                </div>
             </div>
         </div>
     );
