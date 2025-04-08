@@ -26,6 +26,14 @@ export default function Home() {
         setPopoverVisible(false); // Optionally close the popover after selection
     };
 
+    // Add this function to handle playing the sound
+    const handlePlaySound = (soundId) => {
+        const audioElement = document.getElementById(`audio-${soundId}`);
+        if (audioElement) {
+            audioElement.play();
+        }
+    };
+
     // Popover content for the "Add Sound" button
     const popover = (
         <Popover id="popover-basic">
@@ -70,14 +78,17 @@ export default function Home() {
                             <div className='fs-1 mb-3'>&#128266;</div>
                             <div className='fw-bold'>{sound.name}</div>
                             <div className='mt-3'>
-                                <audio controls>
+                                <audio controls id={`audio-${sound.id}`}>
                                     <source src={sound.fileUrl} type="audio/mpeg" />
                                     Your browser does not support the audio element.
                                 </audio>
-                                <Link className="btn btn-secondary mx-1" to={`/viewsound/${sound.id}`}>
-                                    &#128193;
-                                </Link>
-                                <Button variant='danger' className='mx-1'>&#128465;</Button>
+                                <div className="mt-2">
+                                    <Button variant='primary' className='mx-1' onClick={() => handlePlaySound(sound.id)}>&#9654;</Button>
+                                    <Link className="btn btn-secondary mx-1" to={`/viewsound/${sound.id}`}>
+                                        &#128193;
+                                    </Link>
+                                    <Button variant='danger' className='mx-1'>&#128465;</Button>
+                                </div>
                             </div>
                         </div>
                     ))}
