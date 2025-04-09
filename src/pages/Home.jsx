@@ -33,7 +33,7 @@ export default function Home() {
     const handleAddSound = (sound) => {
         // Check if the sound already exists in the sounds array
         const soundExists = sounds.some((existingSound) => existingSound.id === sound.id);
-    
+
         if (!soundExists) {
             const updatedSounds = [...sounds, sound];
             setSounds(updatedSounds); // Update the state
@@ -56,35 +56,37 @@ export default function Home() {
     };
 
     const popover = (
-        <Popover id="popover-basic">
-            <Popover.Body>
-                <table className="table table-sm">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>File</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {hoverData.length > 0 ? (
-                            hoverData.map((sound, index) => (
-                                <tr key={index} onClick={() => handleAddSound(sound)} style={{ cursor: 'pointer' }}>
-                                    <td>{sound.name}</td>
-                                    <td>
-                                        <audio controls>
-                                            <source src={sound.fileUrl} type="audio/mpeg" />
-                                            Your browser does not support the audio element.
-                                        </audio>
-                                    </td>
-                                </tr>
-                            ))
-                        ) : (
+        <Popover id="popover-basic" style={{ maxWidth: '400px' }}>
+            <Popover.Body className="p-0">
+                <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                    <table className="table table-sm table-hover mb-0">
+                        <thead className="sticky-top bg-light">
                             <tr>
-                                <td colSpan="2">No sounds available</td>
+                                <th>Name</th>
+                                <th>File</th>
                             </tr>
-                        )}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {hoverData.length > 0 ? (
+                                hoverData.map((sound, index) => (
+                                    <tr key={index} onClick={() => handleAddSound(sound)} style={{ cursor: 'pointer' }}>
+                                        <td>{sound.name}</td>
+                                        <td>
+                                            <audio controls style={{ width: '150px', height: '30px' }}>
+                                                <source src={sound.fileUrl} type="audio/mpeg" />
+                                                Your browser does not support the audio element.
+                                            </audio>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="2">No sounds available</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </Popover.Body>
         </Popover>
     );
@@ -124,7 +126,8 @@ export default function Home() {
                             placement="bottom"
                             overlay={popover}
                             show={popoverVisible}
-                            onToggle={() => setPopoverVisible(!popoverVisible)}
+                            onToggle={(nextShow) => setPopoverVisible(nextShow)}
+                            rootClose={true}
                         >
                             <Link
                                 to="#"
