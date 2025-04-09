@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 
 export default function ViewSounds() {
+    // Updated to match API response property names (snake_case)
     const [sounds, setSounds] = useState({
         file_url: "",
         name: "",
@@ -14,7 +15,7 @@ export default function ViewSounds() {
 
     useEffect(() => {
         loadSound();
-    }, []);
+    }, [id]); // Added id as dependency so it reloads if id changes
 
     const loadSound = async () => {
         try {
@@ -35,20 +36,28 @@ export default function ViewSounds() {
                     <div className="card">
                         <div className="card-header">
                             Details of sound id: {id}
-                            <ul className="list-group list-group-flush">
-                                <li className="list-group-item">
-                                    <b>file_url:</b> {sounds.file_url || "Not Available"}
-                                </li>
-                                <li className="list-group-item">
-                                    <b>sound name:</b> {sounds.name || "Not Available"}
-                                </li>
-                                <li className="list-group-item">
-                                    <b>Artist:</b> {sounds.artist || "Not Available"}
-                                </li>
-                                <li className="list-group-item">
-                                    <b>Credit:</b> {sounds.credit || "Not Available"}
-                                </li>
-                            </ul>
+                        </div>
+                        <div className="card-body">
+                            <table className="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">File URL</th>
+                                        <td>{sounds.file_url || "Not Available"}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Sound Name</th>
+                                        <td>{sounds.name || "Not Available"}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Artist</th>
+                                        <td>{sounds.artist || "Not Available"}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Credit</th>
+                                        <td>{sounds.credit || "Not Available"}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                     <Link to="/" className="btn btn-primary mt-4">
