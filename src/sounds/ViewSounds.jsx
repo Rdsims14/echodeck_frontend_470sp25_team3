@@ -5,7 +5,6 @@ import { Link, useParams } from "react-router-dom";
 export default function ViewSounds() {
     // Updated to match API response property names (snake_case)
     const [sounds, setSounds] = useState({
-        file_url: "",
         name: "",
         artist: "",
         credit: "",
@@ -34,16 +33,9 @@ export default function ViewSounds() {
                     <h2 className="text-center m-4">Sound Details</h2>
 
                     <div className="card">
-                        <div className="card-header">
-                            Details of sound id: {id}
-                        </div>
                         <div className="card-body">
                             <table className="table table-bordered">
                                 <tbody>
-                                    <tr>
-                                        <th scope="row">File URL</th>
-                                        <td>{sounds.file_url || "Not Available"}</td>
-                                    </tr>
                                     <tr>
                                         <th scope="row">Sound Name</th>
                                         <td>{sounds.name || "Not Available"}</td>
