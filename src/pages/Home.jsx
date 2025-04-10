@@ -7,7 +7,6 @@ export default function Home() {
     const [hoverData, setHoverData] = useState([]);
     const [popoverVisible, setPopoverVisible] = useState(false);
     const [sounds, setSounds] = useState(() => {
-        // Load sounds from sessionStorage if available
         const savedSounds = sessionStorage.getItem('sounds');
         return savedSounds ? JSON.parse(savedSounds) : [];
     });
@@ -17,7 +16,6 @@ export default function Home() {
     }, []);
 
     useEffect(() => {
-        // Save sounds to sessionStorage whenever they change
         sessionStorage.setItem('sounds', JSON.stringify(sounds));
     }, [sounds]);
 
@@ -31,15 +29,14 @@ export default function Home() {
     };
 
     const handleAddSound = (sound) => {
-        // Check if the sound already exists in the sounds array
         const soundExists = sounds.some((existingSound) => existingSound.id === sound.id);
 
         if (!soundExists) {
             const updatedSounds = [...sounds, sound];
-            setSounds(updatedSounds); // Update the state
+            setSounds(updatedSounds);
             setPopoverVisible(false);
         } else {
-            alert("This sound is already added!"); // Optional: Notify the user
+            alert("This sound is already added!");
         }
     };
 
@@ -51,8 +48,12 @@ export default function Home() {
     };
 
     const handleRemoveSound = (soundId) => {
-        const updatedSounds = sounds.filter((sound) => sound.id !== soundId);
-        setSounds(updatedSounds); // Update the state
+        const isConfirmed = window.confirm("Are you sure you want to delete this sound?");
+
+        if (isConfirmed) {
+            const updatedSounds = sounds.filter((sound) => sound.id !== soundId);
+            setSounds(updatedSounds);
+        }
     };
 
     const popover = (
