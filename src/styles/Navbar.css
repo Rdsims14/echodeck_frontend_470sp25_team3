@@ -1,0 +1,28 @@
+/* Navbar background and font */
+.navbar {
+    background-color: #555C83; /* Change to your desired background color */
+    font-family: 'Aldrich', sans-serif; /* Change to your desired font */
+}
+
+/* Navbar brand (Echodeck) */
+.navbar-brand {
+    color: #ecf0f1 !important; /* Change text color */
+    font-size: 1.5rem; /* Adjust font size */
+    font-weight: bold;
+}
+
+.navbar-brand:hover {
+    color: #94a0e3 !important; /* Hover effect */
+}
+
+/* Buttons */
+.btn-outline-light {
+    color: #ecf0f1; /* Button text color */
+    border-color: #ecf0f1; /* Button border color */
+}
+
+.btn-outline-light:hover {
+    color: #2c3e50; /* Hover text color */
+    background-color: #94a0e3; /* Hover background color */
+    border-color: #ecf0f110; /* Hover border color */
+}

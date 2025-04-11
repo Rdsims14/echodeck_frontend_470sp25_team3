@@ -52,7 +52,7 @@ export default function ViewSounds() {
                             </table>
                         </div>
                     </div>
-                    <Link to="/" className="btn btn-primary mt-4">
+                    <Link to="/" className="btn custom-primary-button mt-4">
                         Back to Home
                     </Link>
                 </div>

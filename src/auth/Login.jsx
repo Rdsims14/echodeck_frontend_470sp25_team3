@@ -43,7 +43,7 @@ export default function Login() {
                         className="form-control mb-3"
                     />
                     <div className="d-flex justify-content-between">
-                        <button type="submit" disabled={loading} className="btn btn-primary w-50 me-2">
+                        <button type="submit" disabled={loading} className="btn custom-primary-button w-50 me-2">
                             {loading ? "Logging In..." : "Log In"}
                         </button>
                         <Link to="/" className="btn btn-secondary w-50">
