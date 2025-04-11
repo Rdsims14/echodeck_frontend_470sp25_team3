@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import '../styles/Home.css';
+
 
 export default function Home() {
     const [hoverData, setHoverData] = useState([]);
@@ -105,7 +107,13 @@ export default function Home() {
                                     Your browser does not support the audio element.
                                 </audio>
                                 <div className="mt-2">
-                                    <Button variant='primary' className='mx-1' onClick={() => handlePlaySound(sound.id)}>&#9654;</Button>
+                                    <Button 
+                                    variant='primary' 
+                                    className='custom-primary-button {color: white;' 
+                                    
+                                    onClick={() => handlePlaySound(sound.id)}>
+                                    &#9654;
+                                    </Button>
                                     <Link className="btn btn-secondary mx-1" to={`/viewsound/${sound.id}`}>
                                         &#128193;
                                     </Link>
@@ -142,7 +150,7 @@ export default function Home() {
                                     setPopoverVisible(!popoverVisible);
                                 }}
                                 onMouseEnter={(e) => {
-                                    e.target.style.backgroundColor = 'lightgrey';
+                                    e.target.style.backgroundColor = '#555C83';
                                 }}
                                 onMouseLeave={(e) => {
                                     e.target.style.backgroundColor = 'white';
@@ -150,7 +158,7 @@ export default function Home() {
                                 &#10133;
                             </Link>
                         </OverlayTrigger>
-                        <div className='mt-2'>Add Sound</div>
+                        <div className='mt-2' style={{fontFamily: 'Poppins, sans-serif', fontSize: '16px', fontWeight: 'bold' }}>Add Sound</div>
                     </div>
                 </div>
             </div>

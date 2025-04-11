@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import "../styles/UploadSounds.css";
 export default function UploadSounds() {
     const [sound, setSound] = useState({
         name: "",

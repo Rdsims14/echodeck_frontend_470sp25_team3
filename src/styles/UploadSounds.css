@@ -1,0 +1,56 @@
+/* General container styling */
+.custom-container {
+    margin-top: 50px;
+    padding: 20px;
+    background-color: #ffffff; /* Light gray background */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Form heading */
+h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000000; /* Dark gray text */
+}
+
+/* Form labels */
+.form-label {
+    font-weight: 500;
+    color: #000000; /* Medium gray text */
+}
+
+/* Form inputs */
+.form-control {
+    border: 1px solid #555C83; /* Light gray border */
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 14px;
+}
+
+/* Buttons */
+.btn-outline-primary {
+    color: #555C83;
+    border-color: #555C83;
+}
+
+.btn-outline-primary:hover {
+    background-color: #555C83;
+    color: #fff;
+}
+
+.btn-outline-danger {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+/* Add spacing between buttons */
+.mx-2 {
+    margin-left: 8px;
+    margin-right: 8px;
+}

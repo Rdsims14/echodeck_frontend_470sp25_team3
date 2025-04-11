@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";  // Make sure to import Link for navigation
-
+import "../styles/Navbar.css";
 export default function Navbar() {
     return (
         <div>
-            <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+            <nav className="navbar navbar-expand-lg navbar-dark fixed-top">
                 <div className="container-fluid">
                     <Link className="navbar-brand" to="/">
                         Echodeck
