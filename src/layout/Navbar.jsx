@@ -1,7 +1,17 @@
 import React from "react";
-import { Link } from "react-router-dom";  // Make sure to import Link for navigation
+import { Link, useNavigate } from "react-router-dom";
+import AuthService from "../auth/AuthService";
 import "../styles/Navbar.css";
+
 export default function Navbar() {
+    const navigate = useNavigate();
+    const isAuthenticated = AuthService.isAuthenticated();
+
+    const handleLogout = () => {
+        AuthService.logout();
+        // Redirect handled in AuthService logout method
+    };
+
     return (
         <div>
             <nav className="navbar navbar-expand-lg navbar-dark fixed-top">
@@ -23,25 +33,34 @@ export default function Navbar() {
 
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto">
-                            <li className="nav-item">
-                                <Link className="btn btn-outline-light" to="/uploadsounds">
-                                    Upload Sound
-                                </Link>
-                            </li>
+                            {isAuthenticated && (
+                                <li className="nav-item">
+                                    <Link className="btn btn-outline-light" to="/uploadsounds">
+                                        Upload Sound
+                                    </Link>
+                                </li>
+                            )}
                         </ul>
 
-                    <div className="ms-auto">
-                        <Link to="/signup" className="btn btn-outline-light me-2">
-                            Sign Up
-                        </Link>
-                        <Link to="/login" className="btn btn-outline-light me-2">
-                            Login
-                        </Link>
-                    </div>
+                        <div className="ms-auto">
+                            {!isAuthenticated ? (
+                                <>
+                                    <Link to="/signup" className="btn btn-outline-light me-2">
+                                        Sign Up
+                                    </Link>
+                                    <Link to="/login" className="btn btn-outline-light me-2">
+                                        Login
+                                    </Link>
+                                </>
+                            ) : (
+                                <button onClick={handleLogout} className="btn btn-outline-light me-2">
+                                    Logout
+                                </button>
+                            )}
+                        </div>
                     </div>
                 </div>
             </nav>
         </div>
-        
     );
 }

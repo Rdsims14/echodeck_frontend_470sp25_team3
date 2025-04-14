@@ -3,15 +3,20 @@ import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/Home.css';
-
+import AuthService from '../auth/AuthService';
 
 export default function Home() {
+    const isAuthenticated = AuthService.isAuthenticated();
     const [hoverData, setHoverData] = useState([]);
     const [popoverVisible, setPopoverVisible] = useState(false);
     const [sounds, setSounds] = useState(() => {
         const savedSounds = sessionStorage.getItem('sounds');
         return savedSounds ? JSON.parse(savedSounds) : [];
     });
+
+    // Sound limits based on authentication
+    const MAX_SOUNDS_GUEST = 5;
+    const MAX_SOUNDS_USER = 20;
 
     useEffect(() => {
         fetchHoverData();
@@ -23,23 +28,39 @@ export default function Home() {
 
     const fetchHoverData = async () => {
         try {
-            const result = await axios.get('http://localhost:8080/api/sounds');
+            // Add auth headers if user is authenticated
+            const config = isAuthenticated ? { headers: AuthService.getAuthHeader() } : {};
+            const result = await axios.get('http://localhost:8080/api/sounds', config);
             setHoverData(result.data);
         } catch (error) {
-            console.error("Error fetching hover data:", error);
+            console.error("Error fetching sounds:", error);
+            alert("Could not load sounds. Please try again later.");
         }
     };
 
     const handleAddSound = (sound) => {
         const soundExists = sounds.some((existingSound) => existingSound.id === sound.id);
 
-        if (!soundExists) {
-            const updatedSounds = [...sounds, sound];
-            setSounds(updatedSounds);
-            setPopoverVisible(false);
-        } else {
+        if (soundExists) {
             alert("This sound is already added!");
+            return;
         }
+
+        // Check sound limits based on authentication
+        const currentLimit = isAuthenticated ? MAX_SOUNDS_USER : MAX_SOUNDS_GUEST;
+
+        if (sounds.length >= currentLimit) {
+            const message = isAuthenticated
+                ? `You've reached the maximum of ${currentLimit} sounds.`
+                : `Guests are limited to ${currentLimit} sounds. Sign in to add up to ${MAX_SOUNDS_USER} sounds.`;
+
+            alert(message);
+            return;
+        }
+
+        const updatedSounds = [...sounds, sound];
+        setSounds(updatedSounds);
+        setPopoverVisible(false);
     };
 
     const handlePlaySound = (soundId) => {
@@ -108,12 +129,11 @@ export default function Home() {
                                     Your browser does not support the audio element.
                                 </audio>
                                 <div className="mt-2">
-                                    <Button 
-                                    variant='primary' 
-                                    className='custom-primary-button {color: white;' 
-                                    
-                                    onClick={() => handlePlaySound(sound.id)}>
-                                    &#9654;
+                                    <Button
+                                        variant='primary'
+                                        className='custom-primary-button'
+                                        onClick={() => handlePlaySound(sound.id)}>
+                                        &#9654;
                                     </Button>
                                     <Link className="btn btn-secondary mx-1" to={`/viewsound/${sound.id}`}>
                                         &#128193;
@@ -129,6 +149,8 @@ export default function Home() {
                             </div>
                         </div>
                     ))}
+
+                    {/* Add Sound Button - Available for both guests and signed-in users */}
                     <div className='col text-center d-flex flex-column align-items-center justify-content-center ms-4'>
                         <OverlayTrigger
                             trigger="click"
@@ -159,7 +181,7 @@ export default function Home() {
                                 &#10133;
                             </Link>
                         </OverlayTrigger>
-                        <div className='mt-2' style={{fontFamily: 'Poppins, sans-serif', fontSize: '16px', fontWeight: 'bold' }}>Add Sound</div>
+                        <div className='mt-2' style={{ fontFamily: 'Poppins, sans-serif', fontSize: '16px', fontWeight: 'bold' }}>Add Sound</div>
                     </div>
                 </div>
             </div>
