@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import AuthService from '../auth/AuthService';
 import "../styles/UploadSounds.css";
+
 export default function UploadSounds() {
     const [sound, setSound] = useState({
         name: "",
@@ -9,6 +11,8 @@ export default function UploadSounds() {
         artist: "",
         credit: "",
     });
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState("");
 
     let navigate = useNavigate();
 
@@ -22,26 +26,43 @@ export default function UploadSounds() {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-    
+
+        if (!sound.file) {
+            setMessage('❌ Please select a sound file');
+            return;
+        }
+
+        setLoading(true);
+        setMessage("");
+
         const formData = new FormData();
         formData.append("name", sound.name);
         formData.append("file", sound.file);
-    
+        formData.append("artist", sound.artist);
+        formData.append("credit", sound.credit);
+
         try {
-            await axios.post("http://localhost:8080/api/sounds", formData, {
+            // Include auth headers for protected endpoint
+            const config = {
                 headers: {
+                    ...AuthService.getAuthHeader(),
                     "Content-Type": "multipart/form-data",
-                },
-            });
-            navigate("/");
+                }
+            };
+
+            await axios.post("http://localhost:8080/api/sounds", formData, config);
+            setMessage("✅ Sound uploaded successfully!");
+            setTimeout(() => navigate("/"), 1500);
         } catch (error) {
             console.error("Error uploading sound:", error);
-            alert("Failed to upload the sound. Please try again.");
+            setMessage("❌ Failed to upload sound. Please try again.");
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="custom-container">
+        <div className="custom-container mt-5 pt-5">
             <div className="row">
                 <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 shadow">
                     <h2 className="text-center mb-4">Upload New Sound</h2>
@@ -64,6 +85,7 @@ export default function UploadSounds() {
                                 type="file"
                                 className="form-control"
                                 name="file"
+                                accept="audio/*"
                                 onChange={onFileChange}
                                 required
                             />
@@ -90,15 +112,29 @@ export default function UploadSounds() {
                                 onChange={onInputChange}
                             />
                         </div>
-                        <button type="submit" className="btn btn-outline-primary">Submit</button>
-                        <button
-                            type="button"
-                            className="btn btn-outline-danger mx-2"
-                            onClick={() => navigate("/")}
-                        >
-                            Cancel
-                        </button>
+                        <div className="d-flex justify-content-between">
+                            <button
+                                type="submit"
+                                className="btn custom-primary-button w-50 me-2"
+                                disabled={loading}
+                            >
+                                {loading ? "Uploading..." : "Submit"}
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-secondary w-50"
+                                onClick={() => navigate("/")}
+                            >
+                                Cancel
+                            </button>
+                        </div>
                     </form>
+
+                    {message && (
+                        <div className={`alert ${message.includes('✅') ? 'alert-success' : 'alert-danger'} mt-3`}>
+                            {message}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
