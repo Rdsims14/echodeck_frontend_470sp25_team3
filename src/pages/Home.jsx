@@ -26,6 +26,23 @@ export default function Home() {
         sessionStorage.setItem('sounds', JSON.stringify(sounds));
     }, [sounds]);
 
+    useEffect(() => {
+        if (isAuthenticated) {
+            fetchUserSounds();
+        }
+    }, [isAuthenticated]);
+
+    const fetchUserSounds = async () => {
+        try {
+            const config = { headers: AuthService.getAuthHeader() };
+            const result = await axios.get('http://localhost:8080/api/soundboard/my-sounds', config);
+            setSounds(result.data);
+        } catch (error) {
+            console.error("Error fetching user sounds:", error);
+            alert("Could not load your sounds. Please try again later.");
+        }
+    }
+
     const fetchHoverData = async () => {
         try {
             // Add auth headers if user is authenticated
@@ -38,30 +55,40 @@ export default function Home() {
         }
     };
 
-    const handleAddSound = (sound) => {
+    const handleAddSound = async (sound) => {
         const soundExists = sounds.some((existingSound) => existingSound.id === sound.id);
-
+    
         if (soundExists) {
             alert("This sound is already added!");
             return;
         }
 
         // Check sound limits based on authentication
-        const currentLimit = isAuthenticated ? MAX_SOUNDS_USER : MAX_SOUNDS_GUEST;
+    const currentLimit = isAuthenticated ? MAX_SOUNDS_USER : MAX_SOUNDS_GUEST;
 
-        if (sounds.length >= currentLimit) {
-            const message = isAuthenticated
-                ? `You've reached the maximum of ${currentLimit} sounds.`
-                : `Guests are limited to ${currentLimit} sounds. Sign in to add up to ${MAX_SOUNDS_USER} sounds.`;
+    if (sounds.length >= currentLimit) {
+        const message = isAuthenticated
+            ? `You've reached the maximum of ${currentLimit} sounds.`
+            : `Guests are limited to ${currentLimit} sounds. Sign in to add up to ${MAX_SOUNDS_USER} sounds.`;
 
-            alert(message);
-            return;
+        alert(message);
+        return;
+    }
+
+    try {
+        if (isAuthenticated) {
+            const config = { headers: AuthService.getAuthHeader() };
+            await axios.post(`http://localhost:8080/api/soundboard/add/${sound.id}`, {}, config);
         }
 
         const updatedSounds = [...sounds, sound];
         setSounds(updatedSounds);
         setPopoverVisible(false);
-    };
+    } catch (error) {
+        console.error("Error adding sound:", error);
+        alert("Could not add the sound. Please try again later.");
+    }
+};
 
     const handlePlaySound = (soundId) => {
         const audioElement = document.getElementById(`audio-${soundId}`);
@@ -70,12 +97,22 @@ export default function Home() {
         }
     };
 
-    const handleRemoveSound = (soundId) => {
+    const handleRemoveSound = async (soundId) => {
         const isConfirmed = window.confirm("Are you sure you want to delete this sound?");
-
+    
         if (isConfirmed) {
-            const updatedSounds = sounds.filter((sound) => sound.id !== soundId);
-            setSounds(updatedSounds);
+            try {
+                if (isAuthenticated) {
+                    const config = { headers: AuthService.getAuthHeader() };
+                    await axios.delete(`http://localhost:8080/api/soundboard/remove/${soundId}`, config);
+                }
+    
+                const updatedSounds = sounds.filter((sound) => sound.id !== soundId);
+                setSounds(updatedSounds);
+            } catch (error) {
+                console.error("Error deleting sound:", error);
+                alert("Could not delete the sound. Please try again later.");
+            }
         }
     };
 
