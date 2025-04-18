@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/Home.css';
 import AuthService from '../auth/AuthService';
+import { API_BASE_URL } from '../api';
 
 export default function Home() {
     const isAuthenticated = AuthService.isAuthenticated();
@@ -31,11 +32,11 @@ export default function Home() {
             fetchUserSounds();
         }
     }, [isAuthenticated]);
-
+    
     const fetchUserSounds = async () => {
         try {
             const config = { headers: AuthService.getAuthHeader() };
-            const result = await axios.get('http://localhost:8080/api/soundboard/my-sounds', config);
+            const result = await axios.get(`${API_BASE_URL}/api/soundboard/my-sounds`, config);
             setSounds(result.data);
         } catch (error) {
             console.error("Error fetching user sounds:", error);
@@ -47,7 +48,8 @@ export default function Home() {
         try {
             // Add auth headers if user is authenticated
             const config = isAuthenticated ? { headers: AuthService.getAuthHeader() } : {};
-            const result = await axios.get('http://localhost:8080/api/sounds', config);
+            const result = await axios.get(`${API_BASE_URL}/api/sounds`, config);
+            
             setHoverData(result.data);
         } catch (error) {
             console.error("Error fetching sounds:", error);
@@ -78,7 +80,7 @@ export default function Home() {
     try {
         if (isAuthenticated) {
             const config = { headers: AuthService.getAuthHeader() };
-            await axios.post(`http://localhost:8080/api/soundboard/add/${sound.id}`, {}, config);
+            const result = await axios.post(`${API_BASE_URL}/api/soundboard/add/${sound.id}`, {}, config);
         }
 
         const updatedSounds = [...sounds, sound];
@@ -104,7 +106,7 @@ export default function Home() {
             try {
                 if (isAuthenticated) {
                     const config = { headers: AuthService.getAuthHeader() };
-                    await axios.delete(`http://localhost:8080/api/soundboard/remove/${soundId}`, config);
+                    const result = await axios.delete(`${API_BASE_URL}/api/soundboard/remove/${soundId}`, config);
                 }
     
                 const updatedSounds = sounds.filter((sound) => sound.id !== soundId);

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import AuthService from '../auth/AuthService';
-
+import { API_BASE_URL } from '../api';
 export default function ViewSounds() {
     // Updated to match API response property names (removed description)
     const [sound, setSound] = useState({
@@ -23,7 +23,7 @@ export default function ViewSounds() {
         try {
             // Include auth headers if authenticated
             const config = isAuthenticated ? { headers: AuthService.getAuthHeader() } : {};
-            const result = await axios.get(`http://localhost:8080/api/sounds/${id}`, config);
+            const result = await axios.get(`${API_BASE_URL}/api/sounds/${id}`, config);
             console.log("API Response:", result.data); // Debugging log
             setSound(result.data);
             setLoading(false);
