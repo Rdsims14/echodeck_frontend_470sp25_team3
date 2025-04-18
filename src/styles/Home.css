@@ -1,0 +1,46 @@
+/* Primary button styling */
+
+.custom-button {
+    width: 120px; /* Set a consistent width */
+    margin: 0 10px; /* Add horizontal spacing between buttons */
+    text-align: center; /* Center-align text inside the button */
+}
+
+.custom-button:hover {
+    opacity: 0.9; /* Optional: Add a hover effect */
+}
+
+.custom-primary-button {
+    color: white;
+    background-color: #555C83; /* Blue */
+    border-color: #555C83;
+}
+
+.custom-primary-button:hover {
+    background-color: #474d6e; /* Darker blue on hover */
+    border-color: #474d6e;
+}
+
+/* Secondary button styling */
+.custom-secondary-button {
+    color: white;
+    background-color: #555C83; /* Gray */
+    border-color: #555C83;
+}
+
+.custom-secondary-button:hover {
+    background-color: #424867; /* Darker gray on hover */
+    border-color: #424867;
+}
+
+/* Danger button styling */
+.custom-danger-button {
+    color: white;
+    background-color: #DC3545; /* Red */
+    border-color: #DC3545;
+}
+
+.custom-danger-button:hover {
+    background-color: #C82333; /* Darker red on hover */
+    border-color: #C82333;
+}
