@@ -1,28 +1,77 @@
 /* Navbar background and font */
 .navbar {
-    background-color: #555C83; /* Change to your desired background color */
-    font-family: 'Aldrich', sans-serif; /* Change to your desired font */
+    background-color: #555C83;
+    /* Change to your desired background color */
+    font-family: 'Aldrich', sans-serif;
+    /* Change to your desired font */
 }
 
 /* Navbar brand (Echodeck) */
 .navbar-brand {
-    color: #ecf0f1 !important; /* Change text color */
-    font-size: 1.5rem; /* Adjust font size */
+    color: #ecf0f1 !important;
+    /* Change text color */
+    font-size: 1.5rem;
+    /* Adjust font size */
     font-weight: bold;
 }
 
 .navbar-brand:hover {
-    color: #94a0e3 !important; /* Hover effect */
+    color: #94a0e3 !important;
+    /* Hover effect */
 }
 
 /* Buttons */
 .btn-outline-light {
-    color: #ecf0f1; /* Button text color */
-    border-color: #ecf0f1; /* Button border color */
+    color: #ecf0f1;
+    /* Button text color */
+    border-color: #ecf0f1;
+    /* Button border color */
 }
 
 .btn-outline-light:hover {
-    color: #2c3e50; /* Hover text color */
-    background-color: #94a0e3; /* Hover background color */
-    border-color: #ecf0f110; /* Hover border color */
+    color: #2c3e50;
+    /* Hover text color */
+    background-color: #94a0e3;
+    /* Hover background color */
+    border-color: #ecf0f110;
+    /* Hover border color */
+}
+
+/* Ensure buttons always have white borders in both desktop and mobile views */
+.navbar-nav .btn-outline-light {
+    border: 1px solid white !important;
+    color: white !important;
+}
+
+.navbar-nav .btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Fix mobile dropdown menu styling */
+@media (max-width: 992px) {
+    .navbar-collapse {
+        /* Keep the same background as the main navbar */
+        background: var(--navbar-bg-color);
+        padding: 10px;
+        border-radius: 0 0 4px 4px;
+        margin-top: 0;
+    }
+
+    .navbar-nav .nav-link {
+        color: white !important;
+        padding: 8px 15px;
+    }
+
+    /* Ensure buttons don't lose their styling */
+    .navbar-nav .btn {
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    /* Keep the white border visible */
+    .navbar-nav .btn-outline-light {
+        background-color: transparent !important;
+    }
 }

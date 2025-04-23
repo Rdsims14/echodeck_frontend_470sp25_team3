@@ -32,7 +32,7 @@ export default function Home() {
             fetchUserSounds();
         }
     }, [isAuthenticated]);
-    
+
     const fetchUserSounds = async () => {
         try {
             const config = { headers: AuthService.getAuthHeader() };
@@ -49,48 +49,53 @@ export default function Home() {
             // Add auth headers if user is authenticated
             const config = isAuthenticated ? { headers: AuthService.getAuthHeader() } : {};
             const result = await axios.get(`${API_BASE_URL}/api/sounds`, config);
-            
-            setHoverData(result.data);
+
+            // Ensure we're always setting an array
+            const soundsArray = Array.isArray(result.data) ? result.data :
+                (result.data?.sounds || result.data?.data || []);
+
+            setHoverData(soundsArray);
         } catch (error) {
             console.error("Error fetching sounds:", error);
             alert("Could not load sounds. Please try again later.");
+            setHoverData([]); // Set empty array on error
         }
     };
 
     const handleAddSound = async (sound) => {
         const soundExists = sounds.some((existingSound) => existingSound.id === sound.id);
-    
+
         if (soundExists) {
             alert("This sound is already added!");
             return;
         }
 
         // Check sound limits based on authentication
-    const currentLimit = isAuthenticated ? MAX_SOUNDS_USER : MAX_SOUNDS_GUEST;
+        const currentLimit = isAuthenticated ? MAX_SOUNDS_USER : MAX_SOUNDS_GUEST;
 
-    if (sounds.length >= currentLimit) {
-        const message = isAuthenticated
-            ? `You've reached the maximum of ${currentLimit} sounds.`
-            : `Guests are limited to ${currentLimit} sounds. Sign in to add up to ${MAX_SOUNDS_USER} sounds.`;
+        if (sounds.length >= currentLimit) {
+            const message = isAuthenticated
+                ? `You've reached the maximum of ${currentLimit} sounds.`
+                : `Guests are limited to ${currentLimit} sounds. Sign in to add up to ${MAX_SOUNDS_USER} sounds.`;
 
-        alert(message);
-        return;
-    }
-
-    try {
-        if (isAuthenticated) {
-            const config = { headers: AuthService.getAuthHeader() };
-            const result = await axios.post(`${API_BASE_URL}/api/soundboard/add/${sound.id}`, {}, config);
+            alert(message);
+            return;
         }
 
-        const updatedSounds = [...sounds, sound];
-        setSounds(updatedSounds);
-        setPopoverVisible(false);
-    } catch (error) {
-        console.error("Error adding sound:", error);
-        alert("Could not add the sound. Please try again later.");
-    }
-};
+        try {
+            if (isAuthenticated) {
+                const config = { headers: AuthService.getAuthHeader() };
+                const result = await axios.post(`${API_BASE_URL}/api/soundboard/add/${sound.id}`, {}, config);
+            }
+
+            const updatedSounds = [...sounds, sound];
+            setSounds(updatedSounds);
+            setPopoverVisible(false);
+        } catch (error) {
+            console.error("Error adding sound:", error);
+            alert("Could not add the sound. Please try again later.");
+        }
+    };
 
     const handlePlaySound = (soundId) => {
         const audioElement = document.getElementById(`audio-${soundId}`);
@@ -101,20 +106,59 @@ export default function Home() {
 
     const handleRemoveSound = async (soundId) => {
         const isConfirmed = window.confirm("Are you sure you want to delete this sound?");
-    
+
         if (isConfirmed) {
             try {
                 if (isAuthenticated) {
                     const config = { headers: AuthService.getAuthHeader() };
                     const result = await axios.delete(`${API_BASE_URL}/api/soundboard/remove/${soundId}`, config);
                 }
-    
+
                 const updatedSounds = sounds.filter((sound) => sound.id !== soundId);
                 setSounds(updatedSounds);
             } catch (error) {
                 console.error("Error deleting sound:", error);
                 alert("Could not delete the sound. Please try again later.");
             }
+        }
+    };
+
+    // Update your getPopoverPlacement function
+    const getPopoverPlacement = () => {
+        // Get viewport height and width
+        const viewportHeight = window.innerHeight;
+        const viewportWidth = window.innerWidth;
+        const addButtonPosition = document.querySelector('.add-sound-button')?.getBoundingClientRect();
+
+        // For mobile devices (viewport width < 768px), use 'auto' placement
+        if (viewportWidth < 768) {
+            return 'auto';
+        }
+
+        if (addButtonPosition) {
+            // Check if there's enough space below (need at least 350px for popover)
+            const spaceBelow = viewportHeight - addButtonPosition.bottom;
+            return spaceBelow < 350 ? 'top' : 'bottom';
+        }
+
+        return 'bottom';
+    };
+
+    // Add this function to prevent body scrolling when popover is open
+    const toggleBodyScroll = (disable) => {
+        if (disable) {
+            // Save the current scroll position
+            const scrollY = window.scrollY;
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.width = '100%';
+        } else {
+            // Restore the scroll position
+            const scrollY = document.body.style.top;
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            window.scrollTo(0, parseInt(scrollY || '0') * -1);
         }
     };
 
@@ -130,7 +174,7 @@ export default function Home() {
                             </tr>
                         </thead>
                         <tbody>
-                            {hoverData.length > 0 ? (
+                            {Array.isArray(hoverData) && hoverData.length > 0 ? (
                                 hoverData.map((sound, index) => (
                                     <tr key={index} onClick={() => handleAddSound(sound)} style={{ cursor: 'pointer' }}>
                                         <td>{sound.name}</td>
@@ -155,9 +199,9 @@ export default function Home() {
     );
 
     return (
-        <div className='container-fluid'>
+        <div className='container-fluid p-0'>
             <div className='py-4'>
-                <div className='row row-cols-auto justify-content-center'>
+                <div className='row row-cols-auto justify-content-center g-0'>
                     {sounds.map((sound) => (
                         <div key={sound.id} className='col text-center p-4'>
                             <div className='fs-1 mb-3'>&#128266;</div>
@@ -193,15 +237,22 @@ export default function Home() {
                     <div className='col text-center d-flex flex-column align-items-center justify-content-center ms-4'>
                         <OverlayTrigger
                             trigger="click"
-                            placement="bottom"
+                            placement={getPopoverPlacement()}
                             overlay={popover}
                             show={popoverVisible}
-                            onToggle={(nextShow) => setPopoverVisible(nextShow)}
+                            onToggle={(nextShow) => {
+                                // Toggle body scrolling when popover opens/closes
+                                toggleBodyScroll(nextShow);
+
+                                // Recalculate placement whenever the popover is toggled
+                                getPopoverPlacement();
+                                setPopoverVisible(nextShow);
+                            }}
                             rootClose={true}
                         >
                             <Link
                                 to="#"
-                                className='d-flex align-items-center justify-content-center'
+                                className='d-flex align-items-center justify-content-center add-sound-button' // Added class for reference
                                 style={{
                                     width: '50px', height: '50px', fontSize: '24px', borderRadius: '50%',
                                     border: '2px solid black', textDecoration: 'none', color: 'black',

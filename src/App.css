@@ -1,15 +1,31 @@
+html,
 body {
   margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
   padding-top: 56px;
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 #root {
-  min-height: 100vh;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .App {
-  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   width: 100%;
+  max-height: calc(100vh - 56px);
+  overflow-y: auto;
 }
 
 /*
@@ -32,9 +48,11 @@ body {
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #5c64ffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -43,6 +61,7 @@ body {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -64,60 +83,140 @@ body {
 
 .container-fluid {
   width: 100% !important;
+  margin: 0;
+  padding: 0;
 }
 
 .py-4 {
   width: 100% !important;
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
 }
 
 .table {
   width: 100% !important;
   max-width: 100% !important;
-  table-layout: fixed; /* Forces consistent column widths */
+  table-layout: fixed;
+  /* Forces consistent column widths */
   text-align: center;
 }
 
 .table tbody tr:nth-child(1) {
-  border-top: 2px solid black; /* Dark bold border */
+  border-top: 2px solid black;
+  /* Dark bold border */
 }
 
 .custom-container {
-  width: 100vw; /* key to getting this element to span the entire viewport width */ 
-  margin: 0 auto; 
-  justify-content: center; 
+  width: 100vw;
+  /* key to getting this element to span the entire viewport width */
+  margin: 0 auto;
+  justify-content: center;
   align-items: center;
   text-align: center;
+}
+
+/* Auth pages (Login, Sign Up, Logout) styling - REVISED */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 56px);
+  width: 100%;
+  padding: 0;
+  position: fixed;
+  top: 56px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 450px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Desktop specific styles */
+@media (min-width: 768px) {
+  .auth-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Mobile specific styles */
+@media (max-width: 767px) {
+  .auth-container {
+    padding: 20px;
+    position: absolute;
+    overflow-y: auto;
+  }
+
+  .auth-card {
+    margin: 10px auto;
+    width: 95%;
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+  }
+
+  .auth-form {
+    padding: 1rem;
+  }
+}
+
+.auth-form {
+  padding: 1.5rem;
+  background-color: white;
 }
 
 /* Media query for desktop layout */
 @media (min-width: 768px) {
 
   .btn-view-desktop {
-    display: inline-block; /* shows this element on desktop */
+    display: inline-block;
+    /* shows this element on desktop */
   }
+
   .btn-view-mobile {
-    display: none; /* hides this element on desktop */
+    display: none;
+    /* hides this element on desktop */
   }
 
   .btn-edit-desktop {
-    display: inline-block; /* shows this element on desktop */
+    display: inline-block;
+    /* shows this element on desktop */
   }
+
   .btn-edit-mobile {
-    display: none; /* hides this element on desktop */
+    display: none;
+    /* hides this element on desktop */
   }
 
   .btn-delete-desktop {
-    display: inline-block; /* shows this element on desktop */
+    display: inline-block;
+    /* shows this element on desktop */
   }
+
   .btn-delete-mobile {
-    display: none; /* hides this element on desktop */
+    display: none;
+    /* hides this element on desktop */
   }
 }
 
 /* Media query for mobile layout */
 @media (max-width: 768px) {
 
-  td, th {
+  td,
+  th {
     font-size: 0.85rem;
     letter-spacing: -0.2px;
     font-stretch: extra-condensed;
@@ -130,53 +229,69 @@ body {
     padding: 0;
     margin: 0 0.1rem 0 !important;
     overflow-wrap: normal;
-    font-family: sans-serif; 
+    font-family: sans-serif;
   }
 
   /* styles for first column in table */
-  th:nth-child(1), td:nth-child(1) {
+  th:nth-child(1),
+  td:nth-child(1) {
     width: 8% !important;
   }
 
   /* styles for second column in table */
-  th:nth-child(2), td:nth-child(2) {
+  th:nth-child(2),
+  td:nth-child(2) {
     width: 15% !important;
   }
 
   /* styles for third column in table */
-  th:nth-child(3), td:nth-child(3) {
+  th:nth-child(3),
+  td:nth-child(3) {
     width: 20% !important;
   }
 
   .btn-view-desktop {
-    display: none; /* hides this element on mobile */
+    display: none;
+    /* hides this element on mobile */
   }
+
   .btn-view-mobile {
-    display: inline-block; /* shows this element on mobile */
+    display: inline-block;
+    /* shows this element on mobile */
   }
+
   .btn-edit-desktop {
-    display: none; /* hides this element on mobile */
+    display: none;
+    /* hides this element on mobile */
   }
+
   .btn-edit-mobile {
-    display: inline-block; /* shows this element on mobile */
+    display: inline-block;
+    /* shows this element on mobile */
   }
+
   .btn-delete-desktop {
-    display: none; /* hides this element on mobile */
+    display: none;
+    /* hides this element on mobile */
   }
+
   .btn-delete-mobile {
-    display: inline-block; /* shows this element on mobile */
+    display: inline-block;
+    /* shows this element on mobile */
   }
-} 
+}
 
 /* Additional media query for mobile menu, with different breakpoint for now */
 @media (max-width: 992px) {
   .navbar-collapse {
-    background: #802cbc; /* Makes the mobile menu background match navbar */
+    background: #802cbc;
+    /* Makes the mobile menu background match navbar */
     padding: 10px;
   }
-  
+
   .navbar-nav .btn {
-    width: 100%; /* Makes buttons full width in mobile dropdown */
+    width: 100%;
+    /* Makes buttons full width in mobile dropdown */
     margin-bottom: 5px;
   }
 }
