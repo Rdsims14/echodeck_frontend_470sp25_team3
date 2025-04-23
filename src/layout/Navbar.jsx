@@ -1,47 +1,72 @@
 import React, { useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import AuthService from "../auth/AuthService";
 import "../styles/Navbar.css";
 
 export default function Navbar() {
     const navigate = useNavigate();
+    const location = useLocation();
     const isAuthenticated = AuthService.isAuthenticated();
     const navbarCollapseRef = useRef(null);
+    const navbarTogglerRef = useRef(null);
 
     const handleLogout = () => {
         AuthService.logout();
-        // Redirect handled in AuthService logout method
     };
+
+    // Helper function to close the navbar
+    const closeNavbar = () => {
+        if (navbarCollapseRef.current && navbarCollapseRef.current.classList.contains('show')) {
+            // For Bootstrap 5, we need to use bootstrap's collapse instance
+            if (window.bootstrap && window.bootstrap.Collapse) {
+                const bsCollapse = new window.bootstrap.Collapse(navbarCollapseRef.current);
+                bsCollapse.hide();
+            } else {
+                // Fallback to click method
+                navbarTogglerRef.current.click();
+            }
+        }
+    };
+
+    // Close navbar when location changes
+    useEffect(() => {
+        closeNavbar();
+    }, [location]);
 
     // Handle clicks outside the navbar
     useEffect(() => {
-        function handleClickOutside(event) {
+        function handleOutsideClick(event) {
             if (navbarCollapseRef.current &&
                 !navbarCollapseRef.current.contains(event.target) &&
+                !navbarTogglerRef.current.contains(event.target) &&
                 navbarCollapseRef.current.classList.contains('show')) {
 
-                // Get the navbar toggler button and click it to close the menu
-                const navbarToggler = document.querySelector('.navbar-toggler');
-                if (navbarToggler && !navbarToggler.contains(event.target)) {
-                    navbarToggler.click();
-                }
+                closeNavbar();
             }
         }
 
-        // Add event listener
-        document.addEventListener("mousedown", handleClickOutside);
+        // Add both mouse and touch events for better mobile support
+        document.addEventListener('mousedown', handleOutsideClick);
+        document.addEventListener('touchstart', handleOutsideClick);
 
-        // Cleanup
         return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener('mousedown', handleOutsideClick);
+            document.removeEventListener('touchstart', handleOutsideClick);
         };
     }, []);
+
+    // Add click handlers to nav links to close menu on mobile
+    const handleNavLinkClick = () => {
+        if (window.innerWidth < 992) { // Bootstrap's lg breakpoint
+            closeNavbar();
+        }
+    };
 
     return (
         <div>
             <nav className="navbar navbar-expand-lg navbar-dark fixed-top">
                 <div className="container-fluid">
-                    <Link className="navbar-brand" to="/">
+                    <Link className="navbar-brand" to="/" onClick={handleNavLinkClick}>
                         Echodeck
                     </Link>
                     <button
@@ -52,6 +77,7 @@ export default function Navbar() {
                         aria-controls="navbarSupportedContent"
                         aria-expanded="false"
                         aria-label="Toggle navigation"
+                        ref={navbarTogglerRef}
                     >
                         <span className="navbar-toggler-icon"></span>
                     </button>
@@ -68,15 +94,15 @@ export default function Navbar() {
                         <div className="d-flex navbar-nav">
                             {!isAuthenticated ? (
                                 <>
-                                    <Link to="/signup" className="nav-link btn btn-outline-light me-2">
+                                    <Link to="/signup" className="nav-link btn btn-outline-light me-2" onClick={handleNavLinkClick}>
                                         Sign Up
                                     </Link>
-                                    <Link to="/login" className="nav-link btn btn-outline-light me-2">
+                                    <Link to="/login" className="nav-link btn btn-outline-light me-2" onClick={handleNavLinkClick}>
                                         Login
                                     </Link>
                                 </>
                             ) : (
-                                <button onClick={handleLogout} className="nav-link btn btn-outline-light me-2">
+                                <button onClick={() => { handleLogout(); handleNavLinkClick(); }} className="nav-link btn btn-outline-light me-2">
                                     Logout
                                 </button>
                             )}
