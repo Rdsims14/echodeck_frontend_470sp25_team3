@@ -14,11 +14,11 @@ export default function ViewSounds() {
     const [loading, setLoading] = useState(true);
     const isAuthenticated = AuthService.isAuthenticated();
     const { id } = useParams();
-
+    // Ensure useParams is used to get the sound ID from the URL
     useEffect(() => {
         loadSound();
     }, [id]); // Added id as dependency so it reloads if id changes
-
+    // Function to load sound details from the API
     const loadSound = async () => {
         try {
             // Include auth headers if authenticated
@@ -32,7 +32,7 @@ export default function ViewSounds() {
             setLoading(false);
         }
     };
-
+    // Ensure the component is styled correctly
     if (loading) {
         return (
             <div className="custom container-fluid mt-5 pt-5">
@@ -45,7 +45,7 @@ export default function ViewSounds() {
             </div>
         );
     }
-
+    // Check if sound details are available
     if (!sound.name) {
         return (
             <div className="custom container-fluid mt-5 pt-5">
@@ -60,7 +60,7 @@ export default function ViewSounds() {
             </div>
         );
     }
-
+    // Render sound details if available
     return (
         <div className="custom container-fluid mt-5 pt-5">
             <div className="row">

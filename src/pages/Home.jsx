@@ -5,7 +5,7 @@ import axios from 'axios';
 import '../styles/Home.css';
 import AuthService from '../auth/AuthService';
 import { API_BASE_URL } from '../api';
-
+// Ensure API_BASE_URL is defined in your environment or config
 export default function Home() {
     const isAuthenticated = AuthService.isAuthenticated();
     const [hoverData, setHoverData] = useState([]);
@@ -18,21 +18,21 @@ export default function Home() {
     // Sound limits based on authentication
     const MAX_SOUNDS_GUEST = 5;
     const MAX_SOUNDS_USER = 20;
-
+    // Ensure these limits are defined in your environment or config
     useEffect(() => {
         fetchHoverData();
     }, []);
-
+    // Fetch hover data on initial load
     useEffect(() => {
         sessionStorage.setItem('sounds', JSON.stringify(sounds));
     }, [sounds]);
-
+    // Save sounds to session storage whenever they change
     useEffect(() => {
         if (isAuthenticated) {
             fetchUserSounds();
         }
     }, [isAuthenticated]);
-
+    // Fetch user sounds if authenticated
     const fetchUserSounds = async () => {
         try {
             const config = { headers: AuthService.getAuthHeader() };
@@ -43,7 +43,7 @@ export default function Home() {
             alert("Could not load your sounds. Please try again later.");
         }
     }
-
+    // Fetch hover data from API
     const fetchHoverData = async () => {
         try {
             // Add auth headers if user is authenticated
@@ -53,7 +53,7 @@ export default function Home() {
             // Ensure we're always setting an array
             const soundsArray = Array.isArray(result.data) ? result.data :
                 (result.data?.sounds || result.data?.data || []);
-
+            // Set hover data to the fetched sounds
             setHoverData(soundsArray);
         } catch (error) {
             console.error("Error fetching sounds:", error);
@@ -61,10 +61,10 @@ export default function Home() {
             setHoverData([]); // Set empty array on error
         }
     };
-
+    // Handle adding a sound to the soundboard
     const handleAddSound = async (sound) => {
         const soundExists = sounds.some((existingSound) => existingSound.id === sound.id);
-
+        // Check if the sound is already in the soundboard
         if (soundExists) {
             alert("This sound is already added!");
             return;
@@ -72,7 +72,7 @@ export default function Home() {
 
         // Check sound limits based on authentication
         const currentLimit = isAuthenticated ? MAX_SOUNDS_USER : MAX_SOUNDS_GUEST;
-
+        // Ensure the soundboard does not exceed the limit
         if (sounds.length >= currentLimit) {
             const message = isAuthenticated
                 ? `You've reached the maximum of ${currentLimit} sounds.`
@@ -81,7 +81,7 @@ export default function Home() {
             alert(message);
             return;
         }
-
+        // Proceed to add the sound
         try {
             if (isAuthenticated) {
                 const config = { headers: AuthService.getAuthHeader() };
@@ -96,14 +96,14 @@ export default function Home() {
             alert("Could not add the sound. Please try again later.");
         }
     };
-
+    // Handle playing a sound
     const handlePlaySound = (soundId) => {
         const audioElement = document.getElementById(`audio-${soundId}`);
         if (audioElement) {
             audioElement.play();
         }
     };
-
+    // Handle removing a sound from the soundboard
     const handleRemoveSound = async (soundId) => {
         const isConfirmed = window.confirm("Are you sure you want to delete this sound?");
 
@@ -161,7 +161,7 @@ export default function Home() {
             window.scrollTo(0, parseInt(scrollY || '0') * -1);
         }
     };
-
+    // Popover content for adding sounds
     const popover = (
         <Popover id="popover-basic" style={{ maxWidth: '400px' }}>
             <Popover.Body className="p-0">
@@ -197,7 +197,7 @@ export default function Home() {
             </Popover.Body>
         </Popover>
     );
-
+    // Main component rendering
     return (
         <div className='container-fluid p-0'>
             <div className='py-4'>

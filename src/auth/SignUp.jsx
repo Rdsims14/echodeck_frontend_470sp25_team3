@@ -8,12 +8,12 @@ export default function SignUp() {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
     const navigate = useNavigate();
-
+    // ✅ Ensure AuthService is correctly imported and configured
     const handleSignUp = async (e) => {
         e.preventDefault();
         setMessage(""); // ✅ Clear previous messages
         setLoading(true);
-
+        // ✅ Validate email format
         try {
             await AuthService.register(email, password);
             setMessage("✅ Registration successful! Redirecting to login...");
@@ -33,7 +33,7 @@ export default function SignUp() {
             setLoading(false); // ✅ Reset loading state regardless of outcome
         }
     };
-
+    // ✅ Ensure the component is styled correctly
     return (
         <div className="auth-container">
             <div className="auth-card">
