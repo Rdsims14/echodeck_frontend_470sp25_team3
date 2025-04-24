@@ -36,7 +36,7 @@ export default function Navbar() {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
-
+    // Ensure the navbar is always visible on page load
     return (
         <div>
             <nav className="navbar navbar-expand-lg navbar-dark fixed-top">
