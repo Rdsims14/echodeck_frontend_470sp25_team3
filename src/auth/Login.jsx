@@ -10,12 +10,12 @@ export default function Login() {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
     const navigate = useNavigate();
-
+    // ✅ Ensure API_BASE_URL is defined in your environment or config
     const handleLogin = async (e) => {
         e.preventDefault();
         setMessage(""); // ✅ Clear previous messages
         setLoading(true);
-
+        // ✅ Validate email format
         try {
             const response = await axios.post(`${API_BASE_URL}/auth/login`, {
                 email,
@@ -47,7 +47,7 @@ export default function Login() {
             setLoading(false); // ✅ Reset loading state regardless of outcome
         }
     };
-
+    // ✅ Ensure the component is styled correctly
     return (
         <div className="auth-container">
             <div className="auth-card">

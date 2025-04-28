@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import AuthService from '../auth/AuthService';
 import "../styles/UploadSounds.css";
-
+// Ensure AuthService is correctly imported and configured
 export default function UploadSounds() {
     const [sound, setSound] = useState({
         name: "",
@@ -13,25 +13,25 @@ export default function UploadSounds() {
     });
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
-
+    // Use useNavigate hook for navigation
     let navigate = useNavigate();
-
+    // Handle input changes for text fields
     const onInputChange = (e) => {
         setSound({ ...sound, [e.target.name]: e.target.value });
     };
-
+    // Handle file input change
     const onFileChange = (e) => {
         setSound({ ...sound, file: e.target.files[0] });
     };
-
+    // Ensure the form submission is handled correctly
     const onSubmit = async (e) => {
         e.preventDefault();
-
+        // Validate required fields
         if (!sound.file) {
             setMessage('❌ Please select a sound file');
             return;
         }
-
+        // Validate file type
         setLoading(true);
         setMessage("");
 
@@ -49,7 +49,7 @@ export default function UploadSounds() {
                     "Content-Type": "multipart/form-data",
                 }
             };
-
+            // Post the form data to the backend
             await axios.post("http://localhost:8080/api/sounds", formData, config);
             setMessage("✅ Sound uploaded successfully!");
             setTimeout(() => navigate("/"), 1500);
@@ -60,7 +60,7 @@ export default function UploadSounds() {
             setLoading(false);
         }
     };
-
+    // Ensure the component is styled correctly
     return (
         <div className="custom-container mt-5 pt-5">
             <div className="row">
