@@ -55,6 +55,27 @@ export default function Navbar() {
         };
     }, []);
 
+    // Ensure the navbar toggler button toggles the menu properly
+    useEffect(() => {
+        const navbarToggler = navbarTogglerRef.current;
+
+        function handleToggle() {
+            if (navbarCollapseRef.current) {
+                navbarCollapseRef.current.classList.toggle('show');
+            }
+        }
+
+        if (navbarToggler) {
+            navbarToggler.addEventListener('click', handleToggle);
+        }
+
+        return () => {
+            if (navbarToggler) {
+                navbarToggler.removeEventListener('click', handleToggle);
+            }
+        };
+    }, []);
+
     // Add click handlers to nav links to close menu on mobile
     const handleNavLinkClick = () => {
         if (window.innerWidth < 992) { // Bootstrap's lg breakpoint
